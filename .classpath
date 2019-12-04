@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.core.jobs_3.9.3.v20180115-1757.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.core.resources_3.12.0.v20170417-1558.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.core.runtime_3.13.0.v20170207-1030.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.equinox.common_3.9.0.v20170207-1454.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.equinox.preferences_3.7.0.v20170126-2132.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.jdt.core_3.13.102.v20180330-0919.jar" sourcepath="C:/Users/k-kotou/AppData/Local/Temp/.org.sf.feeling.decompiler1575439439646/source/org.eclipse.jdt.core-3.13.102-sources-1575439440440.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.osgi_3.12.100.v20180210-1608.jar"/>
+	<classpathentry kind="lib" path="C:/Users/k-kotou/pleiades/eclipse/plugins/ast/org.eclipse.core.contenttype_3.6.0.v20170207-1037.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
