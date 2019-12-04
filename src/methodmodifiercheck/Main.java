@@ -1,4 +1,4 @@
-package methodcheck;
+package methodmodifiercheck;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,8 +13,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 public class Main {
 
 	private static final String PACKAGE_PATH = "src/";
-	private static final String JAVA_PACKAGE = "methodcheck/";
-	private static final String JAVA_SOURCE = "Parser.java";
+	private static final String JAVA_PACKAGE = "methodmodifiercheck/";
+	private static final String JAVA_SOURCE = "Main.java";
 
 	public static void main(final String[] args) {
 

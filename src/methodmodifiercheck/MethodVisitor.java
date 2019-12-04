@@ -1,4 +1,4 @@
-package methodcheck;
+package methodmodifiercheck;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 public class MethodVisitor extends ASTVisitor {
 
-	// org.eclipse.jdt.core.Modifier を参照して、16進数を二進した時のけた番号をそのまま数字として捉えた
+	// org.eclipse.jdt.core.Modifier を参照して、16進数を二進した時の桁番号をそのまま数字として捉えた
 	public static final int NONE = 0;
 	public static final int PUBLIC = 1;
 	public static final int PRIVATE = 2;
