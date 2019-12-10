@@ -42,6 +42,7 @@ public class Main {
 
 		MethodVisitor methodVisitor = new MethodVisitor();
 		unit.accept(methodVisitor);
+		System.out.println(methodVisitor.GetMessage());
 	}
 	// プロジェクト内のJavaファイルごとに実行
 	private static void RunPerProjectFile(String packagePath) {

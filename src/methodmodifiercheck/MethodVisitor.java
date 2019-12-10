@@ -23,42 +23,49 @@ public class MethodVisitor extends ASTVisitor {
 	public static final int STRICTFP = 12;
 	public static final int DEFAULT = 15;
 
+	private StringBuilder _sb;
 
-  public boolean visit(MethodDeclaration node) {
-	  Map<Integer, String> map = new HashMap<>();
-	  map = mapCreate();
-	  int getModifier = node.getModifiers();
-	  if(getModifier == NONE) {
-		  System.out.println("メソッドは装飾子が指定されていません");
-		  return super.visit(node);
-	  }
-	  String message = " : ";//"以下の属性を持っています : ";
-	  int modifier = NONE;
-	  while(getModifier != 0) {
-		  modifier++;
-		  if(getModifier % 2 == 1) message += map.get(modifier) + " ";
-		  getModifier /= 2;
-	  }
-	  System.out.print("|	|-"+node.getName().getIdentifier());
-	  System.out.println(message);
-      return super.visit(node);
-  }
-  private Map<Integer, String> mapCreate() {
-	  Map<Integer, String> map = new HashMap<>();
-	  map.put(NONE, "NONE");
-	  map.put(PUBLIC, "PUBLIC");
-	  map.put(PRIVATE, "PRIVATE");
-	  map.put(PROTECTED, "PROTECTED");
-	  map.put(STATIC, "STATIC");
-	  map.put(FINAL, "FINAL");
-	  map.put(SYNCHRONIZED, "SYNCHRONIZED");
-	  map.put(VOLATILE, "VOLATILE");
-	  map.put(TRANSIENT, "TRANSIENT");
-	  map.put(NATIVE, "NATIVE");
-	  map.put(ABSTRACT, "ABSTRACT");
-	  map.put(STRICTFP, "STRICTFP");
-	  map.put(DEFAULT, "DEFAULT");
-	  return map;
-  }
+	public MethodVisitor() {
+		_sb = new StringBuilder();
+	}
 
+	public boolean visit(MethodDeclaration node) {
+		Map<Integer, String> map = new HashMap<>();
+		map = mapCreate();
+		int getModifier = node.getModifiers();
+		if(getModifier == NONE) {
+			_sb.append("メソッドは装飾子が指定されていません\n");
+			return super.visit(node);
+		}
+		String message = " : ";//"以下の属性を持っています : ";
+		int modifier = NONE;
+		while(getModifier != 0) {
+			modifier++;
+			if(getModifier % 2 == 1) message += map.get(modifier) + " ";
+			getModifier /= 2;
+		}
+		_sb.append("|	|-"+node.getName().getIdentifier());
+		_sb.append(message+"\n");
+		return super.visit(node);
+	}
+	private Map<Integer, String> mapCreate() {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(NONE, "NONE");
+		map.put(PUBLIC, "PUBLIC");
+		map.put(PRIVATE, "PRIVATE");
+		map.put(PROTECTED, "PROTECTED");
+		map.put(STATIC, "STATIC");
+		map.put(FINAL, "FINAL");
+		map.put(SYNCHRONIZED, "SYNCHRONIZED");
+		map.put(VOLATILE, "VOLATILE");
+		map.put(TRANSIENT, "TRANSIENT");
+		map.put(NATIVE, "NATIVE");
+		map.put(ABSTRACT, "ABSTRACT");
+		map.put(STRICTFP, "STRICTFP");
+		map.put(DEFAULT, "DEFAULT");
+		return map;
+	}
+	public String GetMessage() {
+		return _sb.toString();
+	}
 }
