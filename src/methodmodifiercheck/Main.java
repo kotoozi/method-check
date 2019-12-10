@@ -1,6 +1,8 @@
 package methodmodifiercheck;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,17 +43,33 @@ public class Main {
 		MethodVisitor methodVisitor = new MethodVisitor();
 		unit.accept(methodVisitor);
 	}
-
-	public static void main(final String[] args) {
-		String filePath = PACKAGE_PATH + JAVA_PACKAGE;
-
-	    File dir = new File(filePath);
+	// プロジェクト内のJavaファイルごとに実行
+	private static void RunPerProjectFile(String packagePath) {
+	    File dir = new File(packagePath);
 	    File[] list = dir.listFiles();
 	    for(int i=0; i<list.length; i++) {
 	      if(list[i].getName().contains(".java")) {
-	        System.out.println(list[i].getName());
-	        MyVisitor(filePath + list[i].getName());
+	        System.out.println("|-"+list[i].getName());
+	        MyVisitor(packagePath + list[i].getName());
 	      }
 	    }
+	}
+
+	private static void OutputToFile(String outputFilePath) {
+		try{
+			File file = new File(outputFilePath);
+			FileWriter fWriter = new FileWriter(file);
+			BufferedWriter bWriter = new BufferedWriter(fWriter);
+
+			bWriter.close();
+		}catch(Exception e) {
+
+		}
+
+	}
+
+	public static void main(final String[] args) {
+		String filePath = PACKAGE_PATH + JAVA_PACKAGE;
+		RunPerProjectFile(filePath);
 	}
 }

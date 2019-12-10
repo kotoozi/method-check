@@ -32,13 +32,14 @@ public class MethodVisitor extends ASTVisitor {
 		  System.out.println("メソッドは装飾子が指定されていません");
 		  return super.visit(node);
 	  }
-	  String message = "以下の属性を持っています : ";
+	  String message = " : ";//"以下の属性を持っています : ";
 	  int modifier = NONE;
 	  while(getModifier != 0) {
 		  modifier++;
 		  if(getModifier % 2 == 1) message += map.get(modifier) + " ";
 		  getModifier /= 2;
 	  }
+	  System.out.print("|	|-"+node.getName().getIdentifier());
 	  System.out.println(message);
       return super.visit(node);
   }
