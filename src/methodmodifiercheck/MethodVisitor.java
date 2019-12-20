@@ -1,6 +1,8 @@
 package methodmodifiercheck;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -24,9 +26,11 @@ public class MethodVisitor extends ASTVisitor {
 	public static final int DEFAULT = 15;
 
 	private StringBuilder _sb;
+	private List<Integer> _methodInfo;
 
 	public MethodVisitor() {
 		_sb = new StringBuilder();
+		_methodInfo = new ArrayList<>();
 	}
 
 	public boolean visit(MethodDeclaration node) {
@@ -41,7 +45,10 @@ public class MethodVisitor extends ASTVisitor {
 		int modifier = NONE;
 		while(getModifier != 0) {
 			modifier++;
-			if(getModifier % 2 == 1) message += map.get(modifier) + " ";
+			if(getModifier % 2 == 1) {
+				message += map.get(modifier) + " ";
+				_methodInfo.add(modifier);
+			}
 			getModifier /= 2;
 		}
 		_sb.append("|	|-"+node.getName().getIdentifier());
@@ -67,5 +74,8 @@ public class MethodVisitor extends ASTVisitor {
 	}
 	public String GetMessage() {
 		return _sb.toString();
+	}
+	public List<Integer> GetMethodInfo() {
+		return _methodInfo;
 	}
 }
