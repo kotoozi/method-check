@@ -7,12 +7,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class Output {
-	private final String OUTPUT_FILE = "sample.csv";
+public class OutputText {
+	private String _outputFile;
+	public OutputText(String outputFile) {
+		_outputFile = outputFile;
+		Reset();
+	}
 	public void WriteToFile(List<Integer> input) {
-		System.out.println("サイズは"+input.size());
 		try {
-			FileWriter fWriter = new FileWriter(OUTPUT_FILE, true);
+			FileWriter fWriter = new FileWriter(_outputFile, true);
 			PrintWriter pWriter = new PrintWriter(new BufferedWriter(fWriter));
 			for(int i = 0;i<input.size();++i) {
 				pWriter.print(input.get(i));
@@ -27,14 +30,14 @@ public class Output {
 		}
 	}
 	public void Reset() {
-	    File file = new File(OUTPUT_FILE);
+	    File file = new File(_outputFile);
 
 	    if (file.exists()){
 	      if (!file.delete()){
 	        System.out.println("ファイルの削除に失敗しました");
 	      }
 	    }else{
-	      System.out.println("ファイルが見つかりません");
+	      System.out.println("ファイルが見つかりませんので新しく生成します");
 	    }
 	}
 }

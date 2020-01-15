@@ -13,10 +13,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class Main {
 
-	private static final String PACKAGE_PATH = "../enshud/src/main/java/enshud/s4/";
-	private static final String JAVA_PACKAGE = "compiler/";
-	private static Output _output = new Output();
-//	private static final String JAVA_SOURCE = "Main.java";
+	private static final String PACKAGE_PATH = "C:\\Users\\k-kotou\\git\\kGenProg\\src\\main\\java\\jp\\kusumotolab\\kgenprog\\";
+	private static final String OUTPUT_FILE = "sample.txt";
+//	private static final String OUTPUT_FILE_CSV = "sample.csv";
+	private static OutputText _output;
 
 
 	/**
@@ -54,32 +54,24 @@ public class Main {
 	 * @param packagePath 解析対象であるパッケージのパス
 	 */
 	private static void RunPerProjectFile(String packagePath) {
-		_output.Reset();
 	    File dir = new File(packagePath);
 	    File[] list = dir.listFiles();
-	    for(int i=0; i<list.length; i++) {
-	      if(list[i].getName().contains(".java")) {
-	        System.out.println("|-"+list[i].getName());
-	        MyVisitor(packagePath + list[i].getName());
-	      }
+	    for(File file : list) {
+	    	if(file.isDirectory()) {										// ディレクトリだった場合
+	    		RunPerProjectFile(packagePath + file.getName() + "\\");		// ディレクトリに対してメソッド検索(再帰)
+	    	}
+	    	else {															// ディレクトリでなかった場合
+	    		if(file.getName().contains(".java")) {						// Javaファイルをメソッド検出対象ファイルとして扱う
+			        System.out.println("|-"+file.getName());				//
+			        MyVisitor(packagePath + file.getName());
+		    	}
+	    	}
 	    }
 	}
 
-//	private static void OutputToFile(String outputFilePath) {
-//		try{
-//			File file = new File(outputFilePath);
-//			FileWriter fWriter = new FileWriter(file);
-//			BufferedWriter bWriter = new BufferedWriter(fWriter);
-//
-//			bWriter.close();
-//		}catch(Exception e) {
-//
-//		}
-//
-//	}
-
 	public static void main(final String[] args) {
-		String filePath = PACKAGE_PATH + JAVA_PACKAGE;
-		RunPerProjectFile(filePath);
+		String dirPath = PACKAGE_PATH;
+		_output = new OutputText(OUTPUT_FILE);
+		RunPerProjectFile(dirPath);
 	}
 }

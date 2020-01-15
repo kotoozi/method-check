@@ -24,10 +24,14 @@ public class MethodVisitor extends ASTVisitor {
 	public static final int ABSTRACT = 11;
 	public static final int STRICTFP = 12;
 	public static final int DEFAULT = 15;
+	public static final String COLON = " : ";
 
 	private StringBuilder _sb;
 	private List<Integer> _methodInfo;
 
+	/**
+	 * コンストラクタ
+	 */
 	public MethodVisitor() {
 		_sb = new StringBuilder();
 		_methodInfo = new ArrayList<>();
@@ -37,11 +41,7 @@ public class MethodVisitor extends ASTVisitor {
 		Map<Integer, String> map = new HashMap<>();
 		map = mapCreate();
 		int getModifier = node.getModifiers();
-		if(getModifier == NONE) {
-			_sb.append("メソッドは装飾子が指定されていません\n");
-			return super.visit(node);
-		}
-		String message = " : ";//"以下の属性を持っています : ";
+		String message = new String();//"以下の属性を持っています : ";
 		int modifier = NONE;
 		while(getModifier != 0) {
 			modifier++;
@@ -51,8 +51,9 @@ public class MethodVisitor extends ASTVisitor {
 			}
 			getModifier /= 2;
 		}
+		if(modifier == NONE) message += map.get(NONE);
 		_sb.append("|	|-"+node.getName().getIdentifier());
-		_sb.append(message+"\n");
+		_sb.append(COLON + message + "\n");
 		return super.visit(node);
 	}
 	private Map<Integer, String> mapCreate() {
