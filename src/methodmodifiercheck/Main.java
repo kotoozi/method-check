@@ -13,15 +13,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class Main {
 	/**
-	 * メインメソッド
-	 * @param args
-	 */
-	public static void main(final String[] args) {
-		String dirPath = PACKAGE_PATH;
-		_output = new OutputText(OUTPUT_FILE);
-		RunPerProjectFile(dirPath);
-	}
-	/**
 	 * 検査するパッケージのパス
 	 */
 	private static final String PACKAGE_PATH = "C:\\Users\\k-kotou\\git\\kGenProg\\src\\main\\java\\jp\\kusumotolab\\kgenprog\\";
@@ -35,12 +26,46 @@ public class Main {
 	 */
 	private static OutputText _output;
 
+	private static TabManage _tabManage;
 
+	/**
+	 * メインメソッド
+	 * @param args
+	 */
+
+	public static void main(final String[] args) {
+		String rootPath = PACKAGE_PATH;
+		_output = new OutputText(OUTPUT_FILE);
+		_tabManage = new TabManage();
+		RunPerDir(rootPath,0);
+	}
+
+	// プロジェクト内のJavaファイルごとに実行
+
+	/**
+	 * プロジェクトディレクトリ単位でのソースコードの分析を行う
+	 * @param dirPath 解析対象であるパッケージのパス
+	 */
+	private static void RunPerDir(String dirPath, int tabNum) {
+		_output.WriteToFile(_tabManage.Tab(tabNum));
+		_output.WriteToFileLn(dirPath);
+	    File[] list = new File(dirPath).listFiles();
+	    for(File file : list) {
+	    	if(file.isDirectory()) {										// ディレクトリだった場合
+	    		RunPerDir(dirPath + file.getName() + "\\", tabNum+1);			// ディレクトリに対してメソッド検索(再帰)
+	    		continue;
+	    	}
+    		if(file.getName().contains(".java")) {							// Javaファイルをメソッド検出対象ファイルとして扱う
+    			_output.WriteToFileLn(_tabManage.Tab(tabNum) + "|-" + file.getName());
+		        MyVisitor(dirPath + file.getName(), tabNum);
+	    	}
+	    }
+	}
 	/**
 	 * ASTを生成するためのメソッド
 	 * @param filePath 解析を行うファイルのパス
 	 */
-	private static void MyVisitor(String filePath) {
+	private static void MyVisitor(String filePath, int tabNum) {
 		List<String> lines = null;
 		try {
 			lines = Files.readAllLines(Paths.get(filePath),StandardCharsets.ISO_8859_1);	// ファイル内部の文字列を読み込み
@@ -49,7 +74,7 @@ public class Main {
 			System.err.println(e.getMessage());		// 読み込みの際に何らかのエラーが生じたときは何もせずにプログラムを終了
 			return;
 		}
-		ExecVisitor(lines);
+		ExecVisitor(lines, tabNum);
 	}
 
 	// ASTの構築
@@ -59,30 +84,12 @@ public class Main {
 	 * ASTVisitorを実際に実行する
 	 * @param lines
 	 */
-	private static void ExecVisitor(List<String> lines) {
+	private static void ExecVisitor(List<String> lines, int tabNum) {
 		ASTParser parser = ASTParser.newParser(AST.JLS10);											// Parser生成
 		parser.setSource(String.join(System.lineSeparator(), lines).toCharArray());					// 検証対象ファイルのテキスト情報を設置
 		CompilationUnit unit = (CompilationUnit) parser.createAST(new NullProgressMonitor());		// AST(構文木)を生成
-		MethodVisitor methodVisitor = new MethodVisitor();										// メソッド検出クラス
+		MethodVisitor methodVisitor = new MethodVisitor(tabNum+1);										// メソッド検出クラス
 		unit.accept(methodVisitor);																	// 実行
 		_output.WriteToFile(methodVisitor.GetMessage());											// 実行結果をファイルに出力
-	}
-	// プロジェクト内のJavaファイルごとに実行
-	/**
-	 * プロジェクトディレクトリ単位でのソースコードの分析を行う
-	 * @param dirPath 解析対象であるパッケージのパス
-	 */
-	private static void RunPerProjectFile(String dirPath) {
-	    File[] list = new File(dirPath).listFiles();
-	    for(File file : list) {
-	    	if(file.isDirectory()) {										// ディレクトリだった場合
-	    		RunPerProjectFile(dirPath + file.getName() + "\\");			// ディレクトリに対してメソッド検索(再帰)
-	    		continue;
-	    	}
-    		if(file.getName().contains(".java")) {							// Javaファイルをメソッド検出対象ファイルとして扱う
-    			_output.WriteToFileLn("|-"+file.getName());
-		        MyVisitor(dirPath + file.getName());
-	    	}
-	    }
 	}
 }

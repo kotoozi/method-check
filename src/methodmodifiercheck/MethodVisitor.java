@@ -1,8 +1,6 @@
 package methodmodifiercheck;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -23,41 +21,46 @@ public class MethodVisitor extends ASTVisitor {
 	public static final int NATIVE = 9;
 	public static final int ABSTRACT = 11;
 	public static final int STRICTFP = 12;
-	public static final int DEFAULT = 15;
+	public static final int DEFAULT = 17;
 	/**
 	 * 得られた装飾子情報に対して算術右シフトを行うための数
 	 */
 	private static final int SRA_SIGNAL = 2;
+	/**
+	 * コロン
+	 */
 	public static final String COLON = " : ";
 
-	private StringBuilder _sb;
-	private List<Integer> _methodInfo;
+	private StringBuilder _sBuilder;
+//	private List<Integer> _methodInfo;
+	private Map<Integer, String> _map;
+
+	private int _tabNum;
 
 	/**
 	 * コンストラクタ
 	 */
-	public MethodVisitor() {
-		_sb = new StringBuilder();
-		_methodInfo = new ArrayList<>();
+	public MethodVisitor(int tabNum) {
+		_sBuilder = new StringBuilder();
+//		_methodInfo = new ArrayList<>();
+		_map = MapCreate();					// 装飾子情報のMap生成
+		_tabNum = tabNum;
 	}
 
 	public boolean visit(MethodDeclaration node) {
-		Map<Integer, String> map = MapCreate();			// 装飾子情報のMap生成
 		int getModifier = node.getModifiers();
 		String message = new String();
 		int modifier = NONE;
 		while(getModifier != 0) {
 			modifier++;
 			if(getModifier % SRA_SIGNAL == 1) {
-				message += map.get(modifier) + " ";
-				_methodInfo.add(modifier);
+				message += _map.get(modifier) + " ";
+//				_methodInfo.add(modifier);
 			}
 			getModifier /= SRA_SIGNAL;
 		}
-		if(modifier == NONE) message += map.get(NONE);
-		_sb.append("|	|-"+node.getName().getIdentifier());
-		_sb.append(COLON + message);
-		_sb.append(System.getProperty("line.separator"));
+		if(modifier == NONE) message += _map.get(NONE);
+		_sBuilder.append(new TabManage().Tab(_tabNum)+"|-"+node.getName().getIdentifier() + COLON + message + System.getProperty("line.separator"));
 		return super.visit(node);
 	}
 	/**
@@ -82,9 +85,9 @@ public class MethodVisitor extends ASTVisitor {
 		return map;
 	}
 	public String GetMessage() {
-		return _sb.toString();
+		return _sBuilder.toString();
 	}
-	public List<Integer> GetMethodInfo() {
-		return _methodInfo;
-	}
+//	public List<Integer> GetMethodInfo() {
+//		return _methodInfo;
+//	}
 }
