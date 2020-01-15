@@ -5,31 +5,54 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 public class OutputText {
+	/**
+	 * 出力先のファイル名
+	 */
 	private String _outputFile;
+	/**
+	 * コンストラクタ
+	 * @param outputFile メインクラスで指定される出力先のファイル
+	 */
 	public OutputText(String outputFile) {
 		_outputFile = outputFile;
 		Reset();
 	}
-	public void WriteToFile(List<Integer> input) {
+	/**
+	 * ファイルに出力する
+	 * @param content 出力するテキスト情報
+	 */
+	public void WriteToFile(String content) {
 		try {
 			FileWriter fWriter = new FileWriter(_outputFile, true);
 			PrintWriter pWriter = new PrintWriter(new BufferedWriter(fWriter));
-			for(int i = 0;i<input.size();++i) {
-				pWriter.print(input.get(i));
-				if(i == input.size() - 1) break;
-				pWriter.print(", ");
-			}
-			pWriter.println();
+			pWriter.print(content);
 			pWriter.close();
 		}
 		catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
-	public void Reset() {
+	/**
+	 * ファイルに改行コード込みで出力する
+	 * @param content 出力するテキスト情報
+	 */
+	public void WriteToFileLn(String content) {
+		try {
+			FileWriter fWriter = new FileWriter(_outputFile, true);
+			PrintWriter pWriter = new PrintWriter(new BufferedWriter(fWriter));
+			pWriter.println(content);
+			pWriter.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 出力先のファイルの情報を初期化する
+	 */
+	private void Reset() {
 	    File file = new File(_outputFile);
 
 	    if (file.exists()){
