@@ -11,6 +11,7 @@ public class TabManage {
 		for(int i=0;i<length;++i) {
 			sBuilder.append("|\t");
 		}
+		sBuilder.append("|-");
 		return sBuilder.toString();
 	}
 }

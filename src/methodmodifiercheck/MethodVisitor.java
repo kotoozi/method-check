@@ -60,7 +60,7 @@ public class MethodVisitor extends ASTVisitor {
 			getModifier /= SRA_SIGNAL;
 		}
 		if(modifier == NONE) message += _map.get(NONE);
-		_sBuilder.append(new TabManage().Tab(_tabNum)+"|-"+node.getName().getIdentifier() + COLON + message + System.getProperty("line.separator"));
+		_sBuilder.append(new TabManage().Tab(_tabNum) + node.getName().getIdentifier() + COLON + message + System.getProperty("line.separator"));
 		return super.visit(node);
 	}
 	/**

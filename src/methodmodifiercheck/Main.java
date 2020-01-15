@@ -19,7 +19,7 @@ public class Main {
 	/**
 	 * 出力ファイル名
 	 */
-	private static final String OUTPUT_FILE = "sample.txt";
+	private static final String OUTPUT_FILE = "OUTPUT.txt";
 //	private static final String OUTPUT_FILE_CSV = "sample.csv";
 	/**
 	 * テキストファイル出力用クラス
@@ -37,6 +37,11 @@ public class Main {
 		String rootPath = PACKAGE_PATH;
 		_output = new OutputText(OUTPUT_FILE);
 		_tabManage = new TabManage();
+		RunPerProject(rootPath);
+	}
+
+	private static void RunPerProject(String rootPath) {
+		_output.WriteToFileLn(rootPath);
 		RunPerDir(rootPath,0);
 	}
 
@@ -47,16 +52,16 @@ public class Main {
 	 * @param dirPath 解析対象であるパッケージのパス
 	 */
 	private static void RunPerDir(String dirPath, int tabNum) {
-		_output.WriteToFile(_tabManage.Tab(tabNum));
-		_output.WriteToFileLn(dirPath);
+//		_output.WriteToFileLn(_tabManage.Tab(tabNum) + dirPath);
 	    File[] list = new File(dirPath).listFiles();
 	    for(File file : list) {
 	    	if(file.isDirectory()) {										// ディレクトリだった場合
-	    		RunPerDir(dirPath + file.getName() + "\\", tabNum+1);			// ディレクトリに対してメソッド検索(再帰)
+	    		_output.WriteToFileLn(_tabManage.Tab(tabNum) + dirPath + file.getName());
+	    		RunPerDir(dirPath + file.getName() + "\\", tabNum+1);		// ディレクトリに対してメソッド検索(再帰)
 	    		continue;
 	    	}
     		if(file.getName().contains(".java")) {							// Javaファイルをメソッド検出対象ファイルとして扱う
-    			_output.WriteToFileLn(_tabManage.Tab(tabNum) + "|-" + file.getName());
+    			_output.WriteToFileLn(_tabManage.Tab(tabNum) + file.getName());
 		        MyVisitor(dirPath + file.getName(), tabNum);
 	    	}
 	    }
