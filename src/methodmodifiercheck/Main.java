@@ -37,22 +37,23 @@ public class Main {
 		String rootPath = PACKAGE_PATH;
 		_output = new OutputText(OUTPUT_FILE);
 		_tabManage = new TabManage();
-		RunPerProject(rootPath);
+		Run(rootPath);
 	}
 
-	private static void RunPerProject(String rootPath) {
+	/**
+	 * 指定したディレクトリに対してプログラムを実行する
+	 * @param rootPath 指定したディレクトリのパス
+	 */
+	private static void Run(String rootPath) {
 		_output.WriteToFileLn(rootPath);
 		RunPerDir(rootPath,0);
 	}
-
-	// プロジェクト内のJavaファイルごとに実行
 
 	/**
 	 * プロジェクトディレクトリ単位でのソースコードの分析を行う
 	 * @param dirPath 解析対象であるパッケージのパス
 	 */
 	private static void RunPerDir(String dirPath, int tabNum) {
-//		_output.WriteToFileLn(_tabManage.Tab(tabNum) + dirPath);
 	    File[] list = new File(dirPath).listFiles();
 	    for(File file : list) {
 	    	if(file.isDirectory()) {										// ディレクトリだった場合
@@ -79,15 +80,14 @@ public class Main {
 			System.err.println(e.getMessage());		// 読み込みの際に何らかのエラーが生じたときは何もせずにプログラムを終了
 			return;
 		}
+		System.out.println(filePath);
 		ExecVisitor(lines, tabNum);
 	}
-
-	// ASTの構築
-	// (参照 : https://sdl.ist.osaka-u.ac.jp/~s-kimura/jdtdoc/jdt.html)
 
 	/**
 	 * ASTVisitorを実際に実行する
 	 * @param lines
+	 * @see <a href="https://sdl.ist.osaka-u.ac.jp/~s-kimura/jdtdoc/jdt.html">ASTの導入</a>
 	 */
 	private static void ExecVisitor(List<String> lines, int tabNum) {
 		ASTParser parser = ASTParser.newParser(AST.JLS10);											// Parser生成
@@ -96,5 +96,6 @@ public class Main {
 		MethodVisitor methodVisitor = new MethodVisitor(tabNum+1);										// メソッド検出クラス
 		unit.accept(methodVisitor);																	// 実行
 		_output.WriteToFile(methodVisitor.GetMessage());											// 実行結果をファイルに出力
+		_output.WriteToFile(new Analyzer(methodVisitor.GetMethodInfo()).getResult());
 	}
 }

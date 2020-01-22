@@ -1,6 +1,8 @@
 package methodmodifiercheck;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -9,6 +11,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 public class MethodVisitor extends ASTVisitor {
 
 	// メモ : org.eclipse.jdt.core.Modifier を参照して、16進数を二進した時の桁番号をそのまま数字として捉えた
+	// その数字情報を定数として以下に示す
+
 	public static final int NONE = 0;
 	public static final int PUBLIC = 1;
 	public static final int PRIVATE = 2;
@@ -23,16 +27,22 @@ public class MethodVisitor extends ASTVisitor {
 	public static final int STRICTFP = 12;
 	public static final int DEFAULT = 17;
 	/**
-	 * 得られた装飾子情報に対して算術右シフトを行うための数
+	 * 得られた装飾子情報に対して算術右シフトを行うための数 : 定数
 	 */
 	private static final int SRA_SIGNAL = 2;
 	/**
-	 * コロン
+	 * コロン : 定数
 	 */
 	public static final String COLON = " : ";
 
+	/**
+	 * 文字列を保存するための変数 : メンバ変数
+	 */
 	private StringBuilder _sBuilder;
-//	private List<Integer> _methodInfo;
+	private List<List<Integer>> _methodInfo;
+	/**
+	 * 装飾子に関するマップデータ : メンバ変数
+	 */
 	private Map<Integer, String> _map;
 
 	private int _tabNum;
@@ -42,7 +52,7 @@ public class MethodVisitor extends ASTVisitor {
 	 */
 	public MethodVisitor(int tabNum) {
 		_sBuilder = new StringBuilder();
-//		_methodInfo = new ArrayList<>();
+		_methodInfo = new ArrayList<>();
 		_map = MapCreate();					// 装飾子情報のMap生成
 		_tabNum = tabNum;
 	}
@@ -50,17 +60,22 @@ public class MethodVisitor extends ASTVisitor {
 	public boolean visit(MethodDeclaration node) {
 		int getModifier = node.getModifiers();
 		String message = new String();
+		List<Integer> mModifier = new ArrayList<>();
 		int modifier = NONE;
 		while(getModifier != 0) {
 			modifier++;
 			if(getModifier % SRA_SIGNAL == 1) {
 				message += _map.get(modifier) + " ";
-//				_methodInfo.add(modifier);
+				mModifier.add(modifier);
 			}
 			getModifier /= SRA_SIGNAL;
 		}
-		if(modifier == NONE) message += _map.get(NONE);
+		if(modifier == NONE) {
+			message += _map.get(NONE);
+			mModifier.add(modifier);
+		}
 		_sBuilder.append(new TabManage().Tab(_tabNum) + node.getName().getIdentifier() + COLON + message + System.getProperty("line.separator"));
+		_methodInfo.add(mModifier);
 		return super.visit(node);
 	}
 	/**
@@ -87,7 +102,7 @@ public class MethodVisitor extends ASTVisitor {
 	public String GetMessage() {
 		return _sBuilder.toString();
 	}
-//	public List<Integer> GetMethodInfo() {
-//		return _methodInfo;
-//	}
+	public List<List<Integer>> GetMethodInfo() {
+		return _methodInfo;
+	}
 }
