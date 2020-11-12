@@ -1,7 +1,6 @@
-method-modifier-check
-====
+# method-modifier-check
 
-Overview
+The project is aimed to measure the Java code's AST.
 
 ## Description
 The environment of this project is follows.
